@@ -7,11 +7,13 @@ import java.util.List;
 public class Deck {
   private List<Card> cards;
 
-  public Deck() {
-    cards = createDeck();
+  public Deck(int deckSize) {
+	  cards = createDeck(deckSize);
   }
   
-  private List<Card> createDeck(){
+  
+
+private List<Card> createDeck(int deckSize){
     List<Card> deck = new ArrayList<>(52);
     for(Suit s : Suit.values()) {
       for(Rank r : Rank.values()) {
@@ -33,4 +35,7 @@ public class Deck {
     return cards.remove(0);
   }
   
+  public void dealCard(Hand hand) {
+		hand.addCard(dealCard()); // calls above method dealsCard
+	}
 }
