@@ -3,6 +3,8 @@ package com.skilldistillery.blackjack.entities;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.skilldistillery.blackjack.app.BlackjackHand;
+
 public abstract class Hand {
 	protected List<Card> cards;
 	
@@ -21,6 +23,10 @@ public abstract class Hand {
 	public void setCards(List<Card> cards) {
 		this.cards = cards;
 	}
+	
+	public List<Card> getHand() {
+		return cards;
+	}
 
 	public void clear() {
 		cards.clear();
@@ -34,8 +40,12 @@ public abstract class Hand {
 	}
 	
 	public String showOnehand() {
-		return "one of hand card is " + getCards().get(0);
+		return "One of dealer's hand card is " + getCards().get(0);
 	}
+
+	//public abstract boolean isBlackjack();
+
+	//public abstract boolean isBust();
 	
 	//public List<Card> getHand() {
 	//	return cards;

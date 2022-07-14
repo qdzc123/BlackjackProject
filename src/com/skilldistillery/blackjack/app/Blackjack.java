@@ -2,21 +2,23 @@ package com.skilldistillery.blackjack.app;
 
 import java.util.Scanner;
 
+import com.skilldistillery.blackjack.entities.Dealer;
 import com.skilldistillery.blackjack.entities.Deck;
+import com.skilldistillery.blackjack.entities.User;
 
 public class Blackjack{
 	
 	Scanner sc = new Scanner(System.in);
-	BlackjackHand dealer;
-	BlackjackHand user;
+	Dealer dealer;
+	User user; //= new User();
 	boolean gameStart;
 	Deck deck; 
 	
 	Blackjack(){
 		
 		gameStart = true;
-		dealer = new BlackjackHand();
-		user = new BlackjackHand();
+		//dealer = new Dealer();
+		user = new User();
 
 	}
 	
@@ -34,6 +36,7 @@ public class Blackjack{
 				System.err.println("Invalid Number");
 			}
 		}
+		//dealer = new Dealer(choice);
 		return choice;
 	}
 
@@ -44,8 +47,10 @@ public class Blackjack{
 
 	private void launch() {
 		// TODO Auto-generated method stub
-		deck = new Deck(deckSize());
-		deck.shuffle();
+		int sizeOfdeck = deckSize();
+		dealer = new Dealer(sizeOfdeck);
+		deck = new Deck(sizeOfdeck);
+		//dealer.shuffle();
 		
 		while(gameStart) {
 			//boolean userHitting = true;
@@ -58,21 +63,22 @@ public class Blackjack{
 	}
 	
 	public void dealerHand() {
-		user.addCard(deck.dealCard());
-		user.addCard(deck.dealCard());
 		
-		System.out.println(user.toString());
+		user.getHand().addCard(dealer.dealCard());
+		user.getHand().addCard(dealer.dealCard());
 		
-		dealer.addCard(deck.dealCard());
-		dealer.addCard(deck.dealCard());
+		System.out.println(user.getHand().toString());
 		
-		System.out.println(dealer.showOnehand());
+		dealer.getHand().addCard(dealer.dealCard());
+		dealer.getHand().addCard(dealer.dealCard());
+		
+		System.out.println(dealer.getHand().showOnehand());
 	}
 
 	
 	public void playerPlay() {
 
-		System.out.println("1. hit \n 2. Stand \n");
+		System.out.println("1. hit \n2. Stand \n");
 		//int choice = sc.nextInt();
 		boolean decision = true;
 		while(decision) {
@@ -80,9 +86,9 @@ public class Blackjack{
 			try {
 				switch(choice) {
 					case 1:
-						user.addCard(deck.dealCard());
-						System.out.println("The User card " + user.toString());
-						if(user.isBlackjack() || user.isBust()) {
+						user.getHand().addCard(dealer.dealCard());
+						System.out.println("The User card " + user.getHand().toString());
+						if(user.getHand().isBlackjack() || user.getHand().isBust()) {
 							decision = false;
 						}
 						break;
@@ -100,11 +106,11 @@ public class Blackjack{
 	}
 	
 	public void dealerPlay() {
-		if(dealer.getHandValue() >= 17) {
+		if(dealer.getHand().getHandValue() >= 17) {
 			System.out.println("No more hit");
 		}
-		while(dealer.getHandValue() < 17) {
-			dealer.addCard(deck.dealCard());
+		while(dealer.getHand().getHandValue() < 17) {
+			dealer.getHand().addCard(dealer.dealCard());
 			//System.out.println();
 		}
 	}
@@ -112,31 +118,31 @@ public class Blackjack{
 	public void showTheWinner() {
 		//boolean userWin = false;
 		//boolean dealerWin = false;
-		if(user.isBlackjack()) {
+		if(user.getHand().isBlackjack()) {
 			//userWin = user.isBlackjack();
 			System.out.println("you got 21. win!!");
 		}
-			else if(user.getHandValue() > dealer.getHandValue() && user.getHandValue() < 21 && !user.isBlackjack()) {
-				System.out.println("The User card " + user.toString() + " is higher than the dealer card " + dealer.toString());
+			else if(user.getHand().getHandValue() > dealer.getHand().getHandValue() && user.getHand().getHandValue() < 21 && !user.getHand().isBlackjack()) {
+				System.out.println("The User card " + user.getHand().toString() + " is higher than the dealer card " + dealer.getHand().toString());
 				System.out.println("User WIN!!");
 		}
-			else if(dealer.getHandValue() > user.getHandValue() && dealer.getHandValue() <= 21) {
-				System.out.println("The Dealer card " + dealer.toString() + " is higher than the user card " +  user.toString());
+			else if(dealer.getHand().getHandValue() > user.getHand().getHandValue() && dealer.getHand().getHandValue() <= 21) {
+				System.out.println("The Dealer card " + dealer.getHand().toString() + " is higher than the user card " +  user.getHand().toString());
 				System.out.println("Dealer WIN!!");
 		}
-			else if(user.isBust()) {
+			else if(user.getHand().isBust()) {
+				//System.out.println("The User card " + user.getHand().toString());
 				System.out.println("You cannot win since you over 21..");
-				System.out.println("The User card " + user.toString());
 			}
-			else if(dealer.isBust() && !user.isBust()){
+			else if(dealer.getHand().isBust() && !user.getHand().isBust()){
+				System.out.println("The dealer card is busted with " + dealer.getHand().toString());
 				System.out.println("Dealer is Bust.. you just won!!");
-				System.out.println("The dealer card is busted with " + dealer.toString());
 			}
 		
-			else if(dealer.isBlackjack()) {
+			else if(dealer.getHand().isBlackjack()) {
 				System.out.println("GAME OVER. DEALER GOT BLACKJACK");
 			}
-			else if(dealer.getHandValue() == user.getHandValue()) {
+			else if(dealer.getHand().getHandValue() == user.getHand().getHandValue()) {
 				System.out.println("You TIE!");
 			}
 	}
@@ -147,8 +153,8 @@ public class Blackjack{
 		switch(choice) {
 			case 1:
 				gameStart = true;
-				user.clear();
-				dealer.clear();
+				user.getHand().clear();
+				dealer.getHand().clear();
 				break;
 			case 2:
 				gameStart = false;

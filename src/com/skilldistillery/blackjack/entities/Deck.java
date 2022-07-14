@@ -14,12 +14,17 @@ public class Deck {
   
 
 private List<Card> createDeck(int deckSize){
-    List<Card> deck = new ArrayList<>(52);
-    for(Suit s : Suit.values()) {
-      for(Rank r : Rank.values()) {
-        deck.add(new Card(r, s));
-      }
+    List<Card> deck = new ArrayList<>();
+    int count = 0;
+    while(count < deckSize) {
+	    for(Suit s : Suit.values()) {
+	      for(Rank r : Rank.values()) {
+	        deck.add(new Card(r, s));
+	      }
+	    }
+	    count++;
     }
+    //shuffle();
     return deck;
   }
   
